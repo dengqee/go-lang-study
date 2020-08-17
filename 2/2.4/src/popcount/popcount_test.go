@@ -9,7 +9,7 @@ import "testing"
 // }
 
 func BenchmarkPopCount1(b *testing.B) {
-    for i :=0; i<b.N;i++ {
-        PopCount1(66666)
-    }
+	for i := 0; i < b.N; i++ {
+		PopCount1(66666)
+	}
 }
