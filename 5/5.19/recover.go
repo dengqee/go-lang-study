@@ -2,16 +2,17 @@ package main
 
 import "fmt"
 
-func main(){
-    f()
-    fmt.Println("Hello, World!")
+func main() {
+	fmt.Println(f())
 }
-func f() {
-    defer func() {
-        if p:= recover();p!= nil {
-            fmt.Printf("%v",p)
-        }
-    }()
-    panic(1)
-}
+func f() (r int) {
+	defer func() {
+		if p := recover(); p != nil {
+			r = 1
+		} else {
+			r = 2
+		}
 
+	}()
+	panic(1)
+}
