@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
 	"os"
-	"sort"
 	"text/tabwriter"
 	"time"
 )
@@ -92,11 +94,44 @@ func less(x, y *Track) bool {
 }
 
 func main() {
-	clicks = []string{"Title", "Year", "Length", "Artist", "Album"}
-	sort.Sort(clickSort{tracks, less})
-	printTracks(tracks)
-
-	clicks = []string{"Year", "Title", "Length", "Artist", "Album"}
-	sort.Sort(clickSort{tracks, less})
-	printTracks(tracks)
+	//clicks = []string{"Title", "Year", "Length", "Artist", "Album"}
+	//sort.Sort(clickSort{tracks, less})
+	//printTracks(tracks)
+	//
+	//clicks = []string{"Year", "Title", "Length", "Artist", "Album"}
+	//sort.Sort(clickSort{tracks, less})
+	//printTracks(tracks)
+	http.HandleFunc("/", home)
+	http.HandleFunc("post", post)
+	log.Println(http.ListenAndServe("localhost:1234", nil))
 }
+
+var users []string
+
+func home(w http.ResponseWriter, _ *http.Request) {
+	if err := homePage.Execute(w, users); err != nil {
+		log.Printf("%v", err)
+	}
+}
+
+func post(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("%v", err)
+		return
+	}
+	fmt.Println(r.PostFormValue("buf"))
+	fmt.Println(r.PostFormValue("Title"))
+	fmt.Println(r.PostFormValue("name"))
+}
+
+var homePage = template.Must(template.New("home").Parse(
+	`<html><body>
+<form action="/post"method="post"><br/>
+<input type='button'value='Title'id='but1'/>
+<input type='button'value='Artist'id='but2'/>
+<input type='button'value='Album'id='but3'/>
+<input type='button'value='Year'id='but4'/>
+<input type='button'value='Length'id='but5'/>
+</form></body></html>
+`))
