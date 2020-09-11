@@ -5,7 +5,7 @@
 //!+
 
 // Package word provides utilities for word games.
-package word
+package palindrome
 
 import "unicode"
 

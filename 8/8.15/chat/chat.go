@@ -33,6 +33,9 @@ func broadcaster() {
 			// Broadcast incoming message to all
 			// clients' outgoing message channels.
 			for cli := range clients {
+				if clients[cli] == false {
+					continue
+				}
 				cli <- msg
 			}
 
@@ -58,11 +61,10 @@ func handleConn(conn net.Conn) {
 	input := bufio.NewScanner(conn)
 	input.Scan()
 	str := input.Text()
-	clientMap[who]=str
+	clientMap[who] = str
 	ch <- "You are " + clientMap[who]
 	messages <- clientMap[who] + " has arrived"
 	entering <- ch
-
 
 	abort := make(chan string)
 	go func() {

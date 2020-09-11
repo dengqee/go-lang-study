@@ -1,5 +1,25 @@
 package main
 
+import "fmt"
+
 func main() {
-	$END$
+	naturals := make(chan int)
+	squares := make(chan int)
+
+	go func() {
+		for x := 0; ; x++ {
+			naturals <- x
+		}
+	}()
+
+	go func() {
+		for {
+			x := <-naturals
+			squares <- x
+		}
+	}()
+
+	for {
+		fmt.Println(<-squares)
+	}
 }

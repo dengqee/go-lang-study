@@ -8,15 +8,16 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
-	"image/png"
 	"math/cmplx"
-	"os"
 	"sync"
+	"time"
 )
 
 func main() {
+	t1 := time.Now()
 	const (
 		xmin, ymin, xmax, ymax = -2, -2, +2, +2
 		width, height          = 1024, 1024
@@ -41,7 +42,9 @@ func main() {
 		}
 	}
 	wg.Wait()
-	png.Encode(os.Stdout, img) // NOTE: ignoring errors
+	//png.Encode(os.Stdout, img) // NOTE: ignoring errors
+	fmt.Println(time.Since(t1))
+
 }
 
 func mandelbrot(z complex128) color.Color {

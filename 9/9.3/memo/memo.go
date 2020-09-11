@@ -59,10 +59,6 @@ func (memo *Memo) Get(key string) (interface{}, error) {
 	response := make(chan result)
 	memo.requests <- request{key, response}
 	res := <-response
-	select {
-	case <-done:
-		return _, _
-	}
 	return res.value, res.err
 }
 
@@ -88,7 +84,9 @@ func (memo *Memo) server(f Func) {
 
 func (e *entry) call(f Func, key string) {
 	// Evaluate the function.
-	e.res.value, e.res.err = f(key)
+	if !cancelled() {
+		e.res.value, e.res.err = f(key)
+	}
 	// Broadcast the ready condition.
 	close(e.ready)
 }

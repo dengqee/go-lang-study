@@ -1,6 +1,7 @@
 package intset
 
 import (
+	"math/rand"
 	"testing"
 )
 
@@ -57,6 +58,22 @@ func TestIntSet_UnionWith(t *testing.T) {
 
 	if x.String() != "{1 9 42 144}" {
 		t.Errorf("unionwith err:%s", x.String())
+	}
+
+}
+func BenchmarkIntSet_Add(b *testing.B) {
+	var x IntSet
+	for i := 0; i < b.N; i++ {
+		x.Add(rand.Int())
+	}
+
+}
+func BenchmarkIntSet_UnionWith(b *testing.B) {
+	var x, y IntSet
+	for i := 0; i < b.N; i++ {
+		x.Add(rand.Int())
+		y.Add(rand.Int())
+		x.UnionWith(&y)
 	}
 
 }

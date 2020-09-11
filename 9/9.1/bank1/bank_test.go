@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"gopl.io/ch9/bank1"
+	"../bank1"
 )
 
 func TestBank(t *testing.T) {
@@ -26,7 +26,22 @@ func TestBank(t *testing.T) {
 		done <- struct{}{}
 	}()
 
+	go func() {
+		str := bank.Withdraw(100)
+		fmt.Println(str)
+		fmt.Println("=", bank.Balance())
+		done <- struct{}{}
+	}()
+
+	go func() {
+		str := bank.Withdraw(1000)
+		fmt.Println(str)
+		fmt.Println("=", bank.Balance())
+		done <- struct{}{}
+	}()
 	// Wait for both transactions.
+	<-done
+	<-done
 	<-done
 	<-done
 

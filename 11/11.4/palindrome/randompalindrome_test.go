@@ -16,6 +16,16 @@ func randomPalindrome(rng *rand.Rand) string {
 		runes[i] = r
 		runes[n-1-i] = r
 	}
+	ninsert := rng.Intn(n)
+	var index int
+	for i := 0; i < ninsert; i++ {
+		index = rng.Intn(len(runes))
+		r1 := runes[:index]
+		r2 := runes[index:]
+		runes = append(r1, rune(' '))
+		runes = append(runes, r2...)
+	}
+
 	return string(runes)
 }
 
@@ -29,29 +39,6 @@ func TestRandomPalindromes(t *testing.T) {
 		p := randomPalindrome(rng)
 		if !IsPalindrome(p) {
 			t.Errorf("IsPalindrome(%q) = false", p)
-		}
-	}
-}
-func randomNoPalindrome(rng *rand.Rand) string {
-	n := 25 //  length
-
-	runes := make([]rune, n)
-	for i := 0; i < n; i++ {
-		r := rune(rng.Intn(0x1000)) // random rune up to '\u0999'
-		runes[i] = r
-	}
-	return string(runes)
-}
-func TestRandomNoPalindromes(t *testing.T) {
-	// Initialize a pseudo-random number generator.
-	seed := time.Now().UTC().UnixNano()
-	t.Logf("Random seed: %d", seed)
-	rng := rand.New(rand.NewSource(seed))
-
-	for i := 0; i < 1000; i++ {
-		p := randomNoPalindrome(rng)
-		if IsPalindrome(p) {
-			t.Errorf("IsPalindrome(%q) = true", p)
 		}
 	}
 }
